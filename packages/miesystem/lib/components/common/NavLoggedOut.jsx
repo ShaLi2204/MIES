@@ -6,21 +6,22 @@ import { FormattedMessage } from 'meteor/vulcan:i18n';
 import Users from 'meteor/vulcan:users';
 import { withApollo } from 'react-apollo';
 import { Meteor } from 'meteor/meteor';
+import { Button } from 'reactstrap';
   
   // navigation bar component when the user is logged out
   
-  const NavLoggedOut = ({ state }) => (
+const NavLoggedOut = ({ state }) => (
   
-    <div className="header-nav">
+  <div className="header-nav">
       
-        <Components.ModalTrigger label="Sign Up/Log In" size="small" >
-          <Components.AccountsLoginForm  formState={state ? STATES[state] : STATES.SIGN_UP}/>
-        </Components.ModalTrigger>
+    <Components.ModalTrigger label="Sign Up/Log In" size="small" component={<Button size="sm" color="primary">Sign Up/ Log In</Button>} >
+      <Components.AccountsLoginForm  formState={state ? STATES[state] : STATES.SIGN_UP}/>
+    </Components.ModalTrigger>
   
-    </div>
-  
-  );
+  </div>
+);
 
 NavLoggedOut.displayName="NavLoggedOut";
+
 registerComponent({ name: 'NavLoggedOut', component: NavLoggedOut});
  

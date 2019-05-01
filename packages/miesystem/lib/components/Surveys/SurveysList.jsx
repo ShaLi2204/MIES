@@ -34,10 +34,6 @@ SurveysList.propTypes = {
 
 }
 
-const columns = [
-  'title',
-];
-
 const options = {
   collection: SurveyLists,
   //fragmentName: 'SurveysItemFragment',

@@ -51,8 +51,8 @@ class SurveysInfoPage extends PureComponent{
                     <td>{surveyList.description}</td>
                     </tr>
                     <tr>
-                    <th scope="row">Survey Items Count</th>
-                    <td>{surveyList.surveyItemsCount}</td>
+                    <th scope="row">Survey Status</th>
+                    <td>{SurveyLists.getStatusName(surveyList)}</td>
                     </tr>
                 </tbody>
                 </Table>

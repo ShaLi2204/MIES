@@ -31,9 +31,18 @@ class SurveysNewPage extends Component{
 
                     <Components.SurveysInfoPage surveyList={surveyList} currentUser={this.props.currentUser}/>
 
-                    <Components.SurveysQuestionsThread 
-                        surveyListId={surveyList._id}
-                    />
+                    {/*<Components.SurveyItemsNewForm />*/}
+
+                    <div className="PageA4">
+
+                        <Components.SurveysQuestionsThread 
+                            terms={{surveyListId:surveyList._id, view:'surveyListSurveyItems'}}
+                            //surveyListId={surveyList._id}
+                        />
+
+                        <Components.SurveyItemsNewForm surveyList={surveyList}/>
+
+                    </div>
                 
                 </div>
             )

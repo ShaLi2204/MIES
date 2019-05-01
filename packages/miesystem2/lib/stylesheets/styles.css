@@ -1,0 +1,188 @@
+body{
+    background: #FAFAFA;
+}
+  
+.main, .header{
+    width: 100%;
+    margin: 20px auto;
+    max-width: 1000px;
+}
+  
+.header-wrapper{
+    background: white;
+    border-bottom: 1px #E7E7E7 solid;
+    margin-bottom: 0px;
+    padding-top: 1px;
+}
+  
+.header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+  
+.header-nav{
+    display: flex;
+    margin-left: 20px;
+}
+
+.modal-trigger {
+    display: inline-block;
+}
+
+/* SurveyItemsNewForm CSS */
+
+.SINF_Modal {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.SINF_ModalCloseBtn {
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+.SINF_NextBtn {
+    position: absolute;
+    bottom: 10px;
+    left: 43%;
+}
+
+.SINF_ModalII {
+    overflow: scroll;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.SINF_SmartFormModal {
+    width: 100%;
+    height: 80%;
+    margin-top: 40px;
+    bottom: 20px;
+}
+
+.SurveyItemsNewFormPage {
+    margin-top: 20px;
+    margin-left: 50px;
+    margin-right: 50px;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.SurveyItemsNewFormContainer {
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.PageA4 {
+    background: white;
+    display: block;
+    margin: 0 auto;
+    margin-bottom: 0.5cm;
+    box-shadow: 0 0 0.5 rgba(0, 0, 0, 0.5);
+    text-align: left;
+    width: 80%;
+}
+
+.NewQuestionBtn {
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+
+.CommentBoxInputBtns {
+    margin-right: 20px;
+    text-align: right;
+    
+}
+
+.SurveyItemsNewFormContainerHP {
+    margin-top: 10px;
+    border-style: solid;
+    border-width: 0.1px;
+    border-color: black;
+}
+
+.SurveyItemDisplay, .SurveyItemDisplayHover {
+    /*margin-left: 15px;
+    margin-right: 15px;
+    margin-top: 20px;
+    margin-bottom: 20px;*/
+    border-style: solid;
+    border-color: white;
+}
+
+.SurveyItemDisplay {
+    background: white;
+}
+
+.SurveyItemDisplayHover {
+    background: lightgrey;
+}
+
+.CommentBoxItem {
+    margin-top: 20px;
+    margin-left: 15px;
+    margin-right: 15px;
+    margin-bottom: 30px;
+}
+
+.CommentBoxTextArea {
+    width: 70%;
+    height: 100px;
+}
+
+/* ----------------- SurveyItemNewForm ------------------*/
+.isRequiredBtn{
+    text-align: left;
+    margin-left: 10px;
+    margin-top: 10px;
+}
+
+/* ----------------- Multiple Choice Input -------------*/
+
+.MultipleChoiceInputPage {
+    text-align: left;
+    margin-left: 30px;
+    margin-right: 30px;
+}
+
+.SurveyItemOptionCss {
+    width: 100%;
+}
+
+/* ------------------- Multiple Choice Display ---------------------*/
+.SurveyItemOptionDisplay{
+    margin-top: 10px;
+    width: 1000px;
+}
+
+.SurveyItemOptionDisplayHover {
+    margin-top: 10px;
+    background: lightgrey;
+}
+
+
+/* ------------------- Rating Scale Input ---------------------*/
+.RatingScaleAddBtn{
+    text-align: right;
+    margin-right: 10px;
+}
+
+/* ------------------- Rating Scale Display ---------------------*/
+
+
+.opensurveyitemspage{
+    margin-left: 30px;
+    margin-right: 30px;
+}
+
+.OpenSurveysListHeaderPage {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-right: 30px;
+    text-align: right;
+}

@@ -7,12 +7,12 @@ registerFragment(`
     createdAt
     title
     description
-
     # users
     userId
     user {
       username
     }
+    surveyItemsCount
   }
 `);
 

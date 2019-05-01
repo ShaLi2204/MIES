@@ -1,0 +1,28 @@
+.nav{
+    @include flex-center;
+    @include small{
+        border-top: 1px solid $medium-grey;
+        margin-top: $vmargin;
+        padding-top: $vmargin;
+        justify-content: space-between;
+    }
+    @include medium-large{
+        .nav-user{
+            margin-right: $hmargin;
+        }
+    }
+    .nav-new-survey {
+        @include small{
+ 
+        }
+    }
+ }
+ 
+ .user-account-menu, .users-menu{
+    .dropdown-toggle, .dropdown-toggle-inner{
+        @include flex-center;
+        img{
+            margin-right: 5px;
+        }
+    }
+ }

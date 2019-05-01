@@ -73,34 +73,25 @@ const schema = {
         }
     },
     
-
-    /*
-    Timestamp of survey first appearing on the site (i.e. being open or public)
-    */
-/*   
-   postedAt: {
-    type: Date,
-    optional: true,
-    canRead: ['guests'],
-    canCreate: ['admins'],
-    canUpdate: ['admins'],
-    input: 'datetime',
-    group: formGroups.admin,
-    onCreate: ({newDocument: surveylist, currentUser}) => {
-    // Set the survey's postedAt if it's going to be approved
-    const userDefaultStatus = getCollection('SurveyLists').getDefaultStatus(currentUser);
-    if (!survey.postedAt &&  ( userDefaultStatus === getCollection('SurveyLists').config.STATUS_OPEN || userDefaultStatus === getCollection('SurveyLists').config.STATUS_PUBLIC ))  {
-        return new Date();
+    postedAt: {
+        type: Date,
+        optional: true,
+        canRead: ['guests'],
+        canCreate: ['members'],
+        canUpdate: ['members'],
+        input: 'datetime',
+        onCreate: ({document: surveyList, currentUser}) => {
+            // Set the surveyList's postedAt if it is going to be published
+            if (!surveyList.postedAt && getCollection('SurveyLists').getDefaultStatus(currentUser) === getCollection('SurveyLists').config.STATUS_PUBLIC){
+                return new Date();
+            }
+        },
+        onUpdate: ({data, document: surveyList}) => {
+            if (!surveyList.postedAt && data.status === getCollection('SurveyLists').config.STATUS_PUBLIC) {
+                return new Date();
+            }
         }
     },
-    onUpdate: ({data, document: surveylist}) => {
-    // Set the survey's postedAt if it's going to be approved
-    if (!surveylist.postedAt && ( data.status === getCollection('SurveyLists').config.STATUS_OPEN || data.status === getCollection('SurveyLists').config.STATUS_PUBLIC )) {
-        return new Date();
-        }
-    }
-},
-*/
 
 /* Title */
     title: {
@@ -169,32 +160,55 @@ const schema = {
     },
 */
 
-/*
-    The survey's status. One of draft (`1`), open (`2`), public ('3'), closed (`4`), deleted ('5')
-*/
-/*
+
     status: {
         type: Number,
         optional: true,
         canRead: ['guests'],
-        canCreate: ['admins'],
-        canUpdate: ['admins'],
+        canCreate: ['members'],
+        canUpdate: ['members'],
         input: 'select',
-        onCreate: ({newDocument: document, currentUser}) => {
-        if (!document.status) {
-            return getCollection('SurveyLists').getDefaultStatus(currentUser);
-        }
+        onCreate: ({document: document, currentUser}) => {
+            if (!document.status) {
+                return getCollection('SurveyLists').getDefaultStatus(currentUser);
+            }
         },
         onUpdate: ({data, currentUser}) => {
-        // if for some reason post status has been removed, give it default status
-        if (data.status === null) {
-            return getCollection('SurveyLists').getDefaultStatus(currentUser);
-        }
+            if(data.status === null) {
+                return getCollection('SurveyLists').getDefaultStatus(currentUser);
+            }
         },
-        options: () => getCollection('SurveyLists').statuses,
-        group: formGroups.admin
+        options: () => getCollection('SurveyLists').statuses
     },
-*/
+
+    /* Whether a survey is scheduled in the future or not */
+    isFuture: {
+        type: Boolean,
+        optional: true,
+        canRead: ['guests'],
+        canCreate: ['members'],
+        canUpdate: ['members'],
+        onCreate: ({document: surveyList}) => {
+            if (surveyList.postedAt) {
+                const postTime = new Date(surveyList.postedAt).getTime();
+                const currentTime = new Date().getTime() + 1000;
+                return postTime > currentTime; //round up to the second
+            }
+        },
+        onUpdate: ({data, document: surveyList}) => {
+            if (data.postedAt) {
+                const postTime = new Date(data.postedAt).getTime();
+                const currentTime = new Date().getTime() + 1000;
+                if (postTime > currentTime){
+                    // if a surveyList's postedAt date is in the future, set isFuture to true
+                    return true;
+                } else if (surveyList.isFuture) {
+                    //else if a post has isFuture to true but its data is in the past, set isFuture to false
+                    return false;
+                }
+            }
+        }
+    },
 
 /* The survey author's name */
 
@@ -219,14 +233,14 @@ const schema = {
         canCreate: ['members'],
         hidden: true,
         resolveAs: {
-        fieldName: 'user',
-        type: 'User',
-        resolver: async (surveyList, args, context) => {
-            if (!surveyList.userId) return null;
-            const user = await context.Users.loader.load(surveyList.userId);
-            return context.Users.restrictViewableFields(context.currentUser, context.Users, user);
-        },
-        addOriginalField: true
+            fieldName: 'user',
+            type: 'User',
+            resolver: async (surveyList, args, context) => {
+                if (!surveyList.userId) return null;
+                const user = await context.Users.loader.load(surveyList.userId);
+                return context.Users.restrictViewableFields(context.currentUser, context.Users, user);
+            },
+            addOriginalField: true
         }
     },
 
@@ -243,6 +257,7 @@ const schema = {
         }
     },
 
+    // A survey can have multiple survey items
     surveyItems: {
         type: Object,
         optional: true,
@@ -252,15 +267,25 @@ const schema = {
           type: '[SurveyItem]',
           resolver: (surveyList, { limit },  { currentUser, Users, SurveyItems }) => {
             const surveyItems = SurveyItems.find({ surveyListId: surveyList._id }, { limit }).fetch();
-    
-            // restrict documents fields
-           // const viewableSurveyItems = _.filter(surveyItems, surveyItems => SurveyItems.checkAccess(currentUser, surveyItems));
-            //const restrictedSurveyItems = Users.restrictViewableFields(currentUser, SurveyItems, viewableSurveyItems);
-    
             return surveyItems;
           }
         }
-      },
+    },
+
+    // A survey can have multiple survey responses
+    surveyResponses: {
+        type: Object, 
+        optional: true, 
+        canRead: ['guests'],
+        resolveAs: {
+            arguments: 'limit: Int = 5',
+            type: '[SurveyResponse]', 
+            resolver: (surveyList, { limit }, { currentUser, Users, SurveyResponses }) => {
+                const surveyResponses = SurveyResponses.find({ surveyListId: surveyList._id}, { limit }).fetch();
+                return surveyResponses;
+            }
+        }
+    }
 
 /* GraphQL-only fields */
 /*

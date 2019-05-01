@@ -26,11 +26,11 @@ class SurveysPage extends Component{
             return(
                 <div>
 
-
                     <Components.SurveysInfoPage surveyList={surveyList} currentUser={this.props.currentUser}/>
 
-                    <Components.SurveysQuestionsDisplayPage 
+                    <Components.SurveysQuestionsThread 
                         terms = {{surveyListId: surveyList._id, view:'surveyListSurveyItems'}}
+                        surveyList={surveyList}
                         //surveyListId={surveyList._id} 
                     />
 

@@ -1,3 +1,9 @@
+/*
+
+Created Surveys Page
+
+*/
+
 import { Components, registerComponent, withDocument, withCurrentUser } from 'meteor/vulcan:core';
 import React from 'react';
 import { FormattedMessage } from 'meteor/vulcan:i18n';
@@ -22,8 +28,6 @@ const SurveysUsersProfile = (props) => {
 
     return (
       <div className="page users-profile">
-      {props.currentUser._id}
-      {user._id}
         <Components.SurveysList terms={terms} /*userId={props.currentUser._id}*/ showHeader={false} />
       </div>
     )

@@ -9,6 +9,17 @@ import { SurveyLists } from './collection.js';
 /**
  * @summary User posts view
  */
+
+ 
+/*
+ SurveyLists.addDefaultView(terms => ({
+   selector: {
+     status: SurveyLists.config.STATUS_PUBLIC,
+     isFuture: {$ne: true}, //match both false and undefined
+     options: {sort : {createdAt:-1}}
+   }
+ }))
+*/
 SurveyLists.addView('userSurveyLists', terms => ({
     selector: {
       userId: terms.userId,
@@ -18,5 +29,32 @@ SurveyLists.addView('userSurveyLists', terms => ({
       sort: {
         createdAt: -1
       }
+    }
+  }));
+
+  SurveyLists.addView('draft', terms=> ({
+    selector: {
+      status: SurveyLists.config.STATUS_DRAFT
+    },
+    options: {
+      sort: {createdAt: -1}
+    }
+  }));
+
+  SurveyLists.addView('public', terms => ({
+    selector: {
+      status: SurveyLists.config.STATUS_PUBLIC,
+    },
+    options: {
+      sort: {createdAt: -1}
+    }
+  }));
+
+  SurveyLists.addView('closed', terms => ({
+    selector: {
+      status: SurveyLists.config.STATUS_CLOSED,
+    },
+    options: {
+      sort: {createdAt: -1}
     }
   }));

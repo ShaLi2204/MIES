@@ -7,7 +7,7 @@ Collection for defining survey responses
 import { createCollection, getDefaultResolvers, getDefaultMutations } from 'meteor/vulcan:core';
 import schema from './schema.js';
 
-const SurveyResponses = createCollection({
+export const SurveyResponses = createCollection({
 
     collectionName: 'SurveyResponses',
 
@@ -18,13 +18,14 @@ const SurveyResponses = createCollection({
     resolver: getDefaultResolvers('SurveyResponses'),
 
     mutations: getDefaultMutations('SurveyResponses')
+    
 });
 
 /* Three types of status of survey responses */
 /* Draft: survey responses in progress */
 /* Public: survey responses is available online */
 /* Delted: survey responses deleted by the creators */
-
+/*
 SurveyResponses.config = {};
 
 SurveyResponses.config.STATUS_DRAFT = 1;
@@ -56,3 +57,6 @@ SurveyResponses.checkAccess = (currentUser, surveyresponse) => {
       return Users.canDo(currentUser, `surveyresponses.view.${status.label}`);
     }
   }
+  */
+
+export default SurveyResponses;

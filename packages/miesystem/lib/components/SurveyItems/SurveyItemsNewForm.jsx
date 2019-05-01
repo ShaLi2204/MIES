@@ -1,201 +1,271 @@
-import { Components, registerComponent, withMessages, withCurrentUser } from 'meteor/vulcan:core';
-import React, {Component} from 'react';
-import { getFragment } from 'meteor/vulcan:lib';
-import PropTypes from 'prop-types';
-//import SurveyItems from '../../modules/SurveyItem/collection.js';
+/*
+
+Created Surveys Page
+
+*/
+
+import { Components, registerComponent, withUpdate, withCreate, withDelete, newMutation, withDocument, withCurrentUser } from 'meteor/vulcan:core';
+import React, { Component } from 'react';
+import { SurveyLists } from '../../modules/Surveys/index.js';
 import { SurveyItems } from '../../modules/SurveyItem/index.js';
+import { Promise } from 'meteor/promise';
 import { FormattedMessage } from 'meteor/vulcan:i18n';
-import { Button, Container, Dropdown, DropdownItem, DropdownToggle, DropdownMenu } from 'reactstrap';
-import Modal from 'react-awesome-modal';
+import Users from 'meteor/vulcan:users';
+import { Link } from 'react-router';
+import { 
+    Button, 
+    Form, 
+    FormGroup, 
+    Label, 
+    Input,
+    InputGroup,
+    InputGroupAddon,
+    ButtonDropdown,
+    DropdownToggle,
+    DropdownMenu,
+    DropdownItem,
+    Container,
+    Row,
+    Col
+ } from 'reactstrap';
 
-class SurveyItemsNewForm extends Component{
-    constructor(props){
-        super(props);
-        this.state= {
-            value:props.surveyListId,
-            visible: false,
-            dropdownOpen: false,
-            DropdownValue: "Item Type",
-            visibleII: false,
+ class SurveyItemsNewForm extends Component{
+    constructor(){
+        super();
+        this.state = {
+            containerOpen: false
         }
     }
 
-    componentWillReceiveProps(){
+    newquestion(){
         this.setState({
-            value: this.props.surveyListId
+            containerOpen: !this.state.containerOpen
         })
     }
 
-    openModal() {
+    closeContainer(){
         this.setState({
-            visible: true
+            containerOpen: false
         })
     }
 
-    toggle() {
-        this.setState(prevState => ({
-            dropdownOpen: !prevState.dropdownOpen
-        }));
-    }
-
-    closeModal() {
-        this.setState({
-            visible: false,
-            DropdownValue: "Item Type"
-        })
-    }
-
-    closeModalII() {
-        this.setState({
-            visibleII: false,
-            DropdownValue: "Item Type"
-        })
-    }
-
-    ClickTextBox(){
-        this.setState({DropdownValue:"Text Box"});
-    }
-
-    ClickFreeText(){
-        this.setState({DropdownValue: "Freetext Question"})
-    }
-
-    ClickSingleChoice(){
-        this.setState({DropdownValue: "Single Choice"})
-    }
-
-    ClickMultipleChoice(){
-        this.setState({DropdownValue: "Multiple Choice"})
-    }
-
-    ClickRatingScala(){
-        this.setState({DropdownValue: "Rating Scala"})
-    }  
-
-    ClickNext() {
-        this.setState({
-            visible: false,
-            visibleII: true,
-        })
-    }
-    
-    SmartFormModal(){
-        let prefilledProps = {surveyItemType:this.state.DropdownValue, surveyListId:this.state.value};
-        if (this.state.DropdownValue=="Text Box"){
-            return(
-                <div>
-                    <Components.SmartForm
-                        collection={SurveyItems}
-                        queryFragment={getFragment('SurveyItemsTextBox')}
-                        prefilledProps={prefilledProps}
-                        successCallback={() => {
-                            //this.props.successCallback();
-                            this.closeModalII();
-                        }}
-                    />
-                </div>
-            )           
-        } else if (this.state.DropdownValue=="Freetext Question") {
-            return(
-                <div>
-                    <Components.SmartForm
-                        collection={SurveyItems}
-                        mutationFragment={getFragment('SurveyItemsTextBox')}
-                        prefilledProps={prefilledProps}
-                        successCallback={() => {
-                            //this.props.successCallback();
-                            this.closeModalII();
-                        }}                    />
-                </div>
-            )
-        } else if (this.state.DropdownValue=="Single Choice") {
-            return(
-                <div>
-                    <Components.SmartForm
-                        collection={SurveyItems}
-                        mutationFragment={getFragment('SurveyItemsChoice')}
-                        prefilledProps={prefilledProps}
-                        successCallback={() => {
-                            //this.props.successCallback();
-                            this.closeModalII();
-                        }}                    />
-                </div>
-            )
-        } else if (this.state.DropdownValue=="Multiple Choice") {
-            return(
-                <div>
-                    <Components.SmartForm
-                        collection={SurveyItems}
-                        mutationFragment={getFragment('SurveyItemsChoice')}
-                        prefilledProps={prefilledProps}
-                        successCallback={() => {
-                            //this.props.successCallback();
-                            this.closeModalII();
-                        }}                    />
-                </div>
-            )
-        }
-    }
 
     render(){
 
-        return(
-        <div>
-            <div>
-                <Button onClick={this.openModal.bind(this)}>New Item</Button>
-            </div>
-            <div className="SINF_Modal">
-                <Modal visible={this.state.visible} width={"30%"} height={"50%"}>
-                    <Button className="SINF_ModalCloseBtn" onClick={()=>this.closeModal()}>x</Button>
-                    <br/><br/><br/>
-                    <p>Please choose item type</p>
-                    <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggle.bind(this)}>
-                        <DropdownToggle caret>{this.state.DropdownValue}</DropdownToggle>
-                        <DropdownMenu>
-                            <DropdownItem onClick={this.ClickTextBox.bind(this)}>Text Box</DropdownItem>
-                            <DropdownItem onClick={this.ClickFreeText.bind(this)}>Freetext Question</DropdownItem>
-                            <DropdownItem onClick={this.ClickSingleChoice.bind(this)}>Single Choice</DropdownItem>
-                            <DropdownItem onClick={this.ClickMultipleChoice.bind(this)}>Multiple Choice</DropdownItem>
-                            <DropdownItem onClick={this.ClickRatingScala.bind(this)}>Rating Scala</DropdownItem>
-                        </DropdownMenu>
-                    </Dropdown>
-                    {/*<Components.ModalTrigger title="New Survey" component={<Button size="sm" color="primary">New Item</Button>}>
-                        <Components.SmartForm
-                            collection={SurveyItems}
-                            mutationFragment={getFragment('SurveyItemsList')}
-                            successCallback={this.props.successCallback}
-                            prefilledProps={{surveyListId:this.state.value}}
-                        />            
-        </Components.ModalTrigger>*/}
-                    <Button className="SINF_NextBtn" onClick={this.ClickNext.bind(this)}>Next</Button>
-                </Modal>
-            </div>
+        const {surveyList} = this.props;
 
-            <Modal visible={this.state.visibleII} width={"80%"} height={"80%"}>
-                <div className="SINF_ModalII">
-                    <div>
-                        <Button className="SINF_ModalCloseBtn" onClick={()=>this.closeModalII()}>x</Button>
-                    </div>
-                    <div className="SINF_SmartFormModal">
-                        {this.SmartFormModal()}
-                    </div>
-                </div>
-            </Modal>
-            <Components.SmartForm
-                collection={SurveyItems}
-                mutationFragment={getFragment('SurveyItemsList')}
-                successCallback={this.props.successCallback}
-                prefilledProps={{surveyListId:this.state.value}}
-            />
+        return(
+            <div className="SurveyItemsNewFormPage">
+                {this.state.containerOpen && <SurveyItemsNewFormContainer closeContainer={this.closeContainer.bind(this)} surveyList={surveyList}/>}
+                <Button className="NewQuestionBtn" onClick={this.newquestion.bind(this)}>New Question</Button>
         </div>
         )
     }
-} ;
+}
 
-SurveyItemsNewForm.propTypes = {
-    surveyListId: PropTypes.string.isRequired,
-    type: PropTypes.string,
-    successCallback: PropTypes.func
-};
+const createOptions = {
+    collectionName: 'SurveyItems',
+    fragmentName: 'SurveyItemsList'
+}
 
-registerComponent({name:'SurveyItemsNewForm', component: SurveyItemsNewForm, hocs:[withMessages, withCurrentUser]});
+const deleteOptions = {
+    collectionName: 'SurveyItems'
+}
+
+const updateOptions = {
+    collectionName: 'SurveyItems'
+}
+
+registerComponent({
+    name: 'SurveyItemsNewForm', 
+    component: SurveyItemsNewForm, 
+    hocs: [[withCreate,createOptions],
+        [withDelete, deleteOptions], 
+        [withUpdate, updateOptions]] 
+})
+;
+
+class SurveyItemsNewFormContainer extends Component{
+    constructor(){
+        super();
+        this.state = {
+            dropdownOpen: false,
+            dropdownValue: 'Question Type',
+            textboxPage: false,
+            commentboxPage: false,
+            multiplechoicePage: false,
+            checkboxPage: false,
+            ratingscalePage: false,
+            InputValue: '',
+            isRequired:''
+        }
+    }
+
+
+    /* Toggle function for ButtonDropdown*/
+    toggle(){
+        this.setState({
+            dropdownOpen: !this.state.dropdownOpen
+        })
+    }
+
+    CheckBoxFunc(event){
+        this.setState({isRequired: event.target.checked});
+    }
+
+    ddtextbox(){
+        this.setState({
+            dropdownValue: 'Textbox',
+            textboxPage: true,
+            commentboxPage: false,
+            multiplechoicePage: false,
+            checkboxPage: false,
+            ratingscalePage: false
+        })
+    }
+
+    ddcommentbox(){
+        this.setState({
+            dropdownValue: 'Comment Box',
+            textboxPage: false,
+            commentboxPage: true,
+            multiplechoicePage: false,
+            checkboxPage: false,
+            ratingscalePage: false
+        })
+    }
+
+    ddmultiplechoice(){
+        this.setState({
+            dropdownValue: 'Multiple Choice',
+            textboxPage: false,
+            commentboxPage: false,
+            multiplechoicePage: true,
+            checkboxPage: false,
+            ratingscalePage: false
+        })
+    }
+
+    ddcheckbox(){
+        this.setState({
+            dropdownValue: 'Check Box',
+            textboxPage: false,
+            commentboxPage: false,
+            multiplechoicePage: false,
+            checkboxPage: true,
+            ratingscalePage: false
+        })
+    }
+
+    ddratingscale(){
+        this.setState({
+            dropdownValue: 'Rating Scale',
+            textboxPage: false,
+            commentboxPage: false,
+            multiplechoicePage: false,
+            checkboxPage: false,
+            ratingscalePage: true
+        })
+    }
+
+    cancelFunc(){
+        this.setState({
+            dropdownValue: 'Question Type',
+            textboxPage: false,
+            commentboxPage: false,
+            multiplechoicePage: false,
+            checkboxPage: false,
+            ratingscalePage: false,
+            //InputValue:''
+        })
+    }
+
+    InputValueFunc(event){
+        this.setState({
+            InputValue: event.target.value
+        })
+    }
+
+    clearFunc(){
+        this.setState({
+            InputValue:'',
+            textboxPage: false,
+            commentboxPage: false,
+            multiplechoicePage: false,
+            checkboxPage: false,
+            ratingscalePage: false,
+            dropdownValue: 'Question Type'
+        });
+        this.props.closeContainer();
+    }
+
+    render(){
+        const seedData = this.state.seedData;
+        const {surveyList} = this.props;
+        //const { SurveyLists } = this.props.SurveyLists;
+        return(
+            <div className="SurveyItemsNewFormContainerHP">
+                <div className="SurveyItemsNewFormContainer">
+                    <InputGroup>
+                    <Input onChange={this.InputValueFunc.bind(this)} value={this.state.InputValue} placeholder="Please enter your question"/>
+                    <InputGroupAddon addonType="append">
+                    <ButtonDropdown direction="down" isOpen={this.state.dropdownOpen} toggle={this.toggle.bind(this)}>
+                                <DropdownToggle caret>
+                                    {this.state.dropdownValue}
+                                </DropdownToggle>
+                                <DropdownMenu>
+                                    <DropdownItem onClick={this.ddtextbox.bind(this)}>Textbox</DropdownItem>
+                                    <DropdownItem onClick={this.ddcommentbox.bind(this)}>Comment Box</DropdownItem>
+                                    <DropdownItem onClick={this.ddmultiplechoice.bind(this)}>Multiple Choice</DropdownItem>
+                                    <DropdownItem onClick={this.ddcheckbox.bind(this)}>Check Box</DropdownItem>
+                                    <DropdownItem onClick={this.ddratingscale.bind(this)}>Rating Scale</DropdownItem>
+                                </DropdownMenu>
+                            </ButtonDropdown>
+                    </InputGroupAddon>
+                    </InputGroup>
+                    <FormGroup check className="isRequiredBtn">
+                    <Label check>
+                        <Input type="checkbox" onChange={this.CheckBoxFunc.bind(this)}/> {' '}Required
+                    </Label>
+                    </FormGroup>
+                </div>
+                {this.state.textboxPage && <Components.TextBoxInput
+                    cancelFunc={this.cancelFunc.bind(this)}
+                    surveyListId={surveyList._id}
+                    questionValue={this.state.InputValue}
+                    clearFunc={this.clearFunc.bind(this)}
+                    isRequired={this.state.isRequired}
+                />}
+                {this.state.commentboxPage && <Components.CommentBoxInput
+                    cancelFunc={this.cancelFunc.bind(this)}
+                    surveyListId={surveyList._id}
+                    questionValue={this.state.InputValue}
+                    clearFunc={this.clearFunc.bind(this)}
+                    isRequired={this.state.isRequired}
+                />}
+                {this.state.multiplechoicePage && <Components.MultipleChoiceInput
+                    cancelFunc={this.cancelFunc.bind(this)}     
+                    surveyListId={surveyList._id}
+                    questionValue={this.state.InputValue}
+                    clearFunc={this.clearFunc.bind(this)}
+                    isRequired={this.state.isRequired}
+                />}
+                {this.state.checkboxPage && <Components.CheckBoxInput
+                    cancelFunc={this.cancelFunc.bind(this)}     
+                    surveyListId={surveyList._id}
+                    questionValue={this.state.InputValue}
+                    clearFunc={this.clearFunc.bind(this)}
+                    isRequired={this.state.isRequired}
+                />}
+                {this.state.ratingscalePage && <Components.RatingScaleInput
+                    cancelFunc={this.cancelFunc.bind(this)}     
+                    surveyListId={surveyList._id}
+                    questionValue={this.state.InputValue}
+                    clearFunc={this.clearFunc.bind(this)}
+                    isRequired={this.state.isRequired}
+                />}
+            </div>
+
+        )
+    }
+}

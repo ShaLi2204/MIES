@@ -9,14 +9,14 @@ import Users from 'meteor/vulcan:users';
 import { withApollo } from 'react-apollo';
 import { Meteor } from 'meteor/meteor';
   
-  // navigation bar component when the user is logged out
+// navigation bar component when the user is logged out
   
  
-  // Header component
+// Header component
   
-  const Header = (props) => {
+const Header = (props) => {
 
-    return(
+  return(
   
     <div className="header-wrapper">
   
@@ -28,18 +28,15 @@ import { Meteor } from 'meteor/meteor';
       <div className="nav">
         <div className="nav-user">
         {!!props.currentUser ? 
-          <Components.NavLoggedIn currentUser={props.currentUser}/> : 
+          <Components.NavLoggedIn /*currentUser={props.currentUser}*//> : 
           <Components.NavLoggedOut/>
         }
         </div>
+        
         <div className="nav-new-survey">
-          {/*<Components.ShowIf check={SurveyLists.options.mutations.new.check}>*/}
-          {/*</Components.ShowIf>*/}
-{/*
-          <Components.ShowIf check={() => Users.canDo(props.currentUser, 'surveyLists.new')}>
+          <Components.ShowIf check={SurveyLists.options.mutations.new.check}>
             <Components.SurveysNewButton/>
           </Components.ShowIf>
-*/}
         </div>
       </div>
       </div>

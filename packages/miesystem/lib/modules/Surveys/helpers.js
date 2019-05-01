@@ -24,6 +24,26 @@ SurveyLists.getLink = function (surveyList, isAbsolute = false, isRedirected = t
   return !!surveyList.url ? url : SurveyLists.getPageUrl(surveyList, isAbsolute);
 };
 
+SurveyLists.getLinkCreated = function (surveyList, isAbsolute = false, isRedirected = true) {
+  const url = isRedirected ? Utils.getOutgoingUrl(surveyList.url) : surveyList.url;
+  return !!surveyList.url ? url : SurveyLists.getPageUrlCreated(surveyList, isAbsolute);
+};
+
+SurveyLists.getPageUrlCreated = function(surveyList, isAbsolute = false){
+  const prefix = isAbsolute ? Utils.getSiteUrl().slice(0,-1) : '';
+  return `${prefix}/newsurvey/${surveyList._id}`;
+};
+
+SurveyLists.getLinkOpenSurveys = function (surveyList, isAbsolute = false, isRedirected = true) {
+  const url = isRedirected ? Utils.getOutgoingUrl(surveyList.url) : surveyList.url;
+  return !!surveyList.url ? url : SurveyLists.getPageUrlOpenSurvey(surveyList, isAbsolute);
+};
+
+SurveyLists.getPageUrlOpenSurvey = function(surveyList, isAbsolute = false) {
+  const prefix = isAbsolute ? Utils.getSiteUrl().slice(0,-1) : '';
+  return `${prefix}/opensurveys/${surveyList._id}`;
+}
+
 /**
  * @summary Depending on the settings, return either a surveyList's URL link (if it has one) or its page URL.
  * @param {Object} surveyList
@@ -52,6 +72,40 @@ SurveyLists.getPageUrl = function(surveyList, isAbsolute = false){
     return `${prefix}/surveyLists/${surveyList._id}`;
 };
 
+SurveyLists.getNewPageUrl = function(surveyList, isAbsolute = false){
+  const prefix = isAbsolute ? Utils.getSiteUrl().slice(0,-1) : '';
+  return `${prefix}/newsurvey/${surveyList._id}`;
+};
 
+SurveyLists.getDefaultStatus = function (user) {
+  return SurveyLists.config.STATUS_DRAFT;
+/*  const canSurveyListDraft = typeof user === 'undefined' ? false: Users.canDo(user, 'surveylists.new.draft');
+  if (canSurveyListDraft) {
+    return SurveyLists.config.STATUS_DRAFT;
+  } else {
+    return SurveyLists.config.STATUS_DRAFT;
+  }
+*/  
+};
+
+SurveyLists.getStatusName = function (surveyList) {
+  if (surveyList.status === null) {
+    return "NULL"
+  } else {
+  return Utils.findWhere(SurveyLists.statuses, {value: surveyList.status}).label;
+  }
+}
+
+SurveyLists.isDraft = function (surveyList) {
+  return surveyList.status === SurveyLists.config.STATUS_DRAFT;
+};
+
+SurveyLists.isPublic = function (surveyList) {
+  return surveyList.status === SurveyLists.config.STATUS_PUBLIC;
+};
+
+SurveyLists.isClosed = function (surveyList) {
+  return surveyList.status === SurveyLists.config.STATUS_CLOSED;
+}
   
   

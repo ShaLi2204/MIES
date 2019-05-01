@@ -50,7 +50,7 @@ class NavBar extends Component{
                         </DropdownMenu>
                     </UncontrolledDropdown>
                     <NavItem>
-                        <NavLink href='/surveylist'>
+                        <NavLink href='/opensurveys'>
                             Open Surveys
                         </NavLink>
                     </NavItem>

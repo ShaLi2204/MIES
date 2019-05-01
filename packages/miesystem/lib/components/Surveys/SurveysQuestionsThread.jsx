@@ -6,18 +6,21 @@ import { withList, withCurrentUser, Components, registerComponent, Utils } from 
 
 const SurveysQuestionsThread = (props) => {
 
-    const {loading, /*terms: {surveyListId},*/ surveyListId, results, totalCount, surveyItemsCount, currentUser } = props;
+    const {loading, results, totalCount, surveyItemsCount, currentUser, terms, surveyList } = props;
 
     if (loading) {
+
         return <div><Components.Loading/></div>
+
     } else {
+        
         const resultsClone = _.map(results, _.clone);
         //const nestedSurveyItems = Utils.unflatten(resultsClone, {idProperty: '_id'});
 
         return(
             <div>
                 <div>
-                    <Components.SurveyItemsList currentUser={currentUser} surveyItems={resultsClone} surveyItemCount={totalCount}/>
+                    <Components.SurveyItemsList currentUser={currentUser} surveyItems={resultsClone} surveyItemCount={totalCount} /*surveyListId={surveyListId}*//>
                 </div>
             </div>
         );

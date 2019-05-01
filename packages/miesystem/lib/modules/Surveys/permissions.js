@@ -6,23 +6,26 @@ SurveyLists permissions
 
 import Users from 'meteor/vulcan:users';
 
-/*
+
 const guestsActions = [
-    'surveyLists.view'
+    'surveyLists.view.public'
 ];
 Users.groups.guests.can(guestsActions);
-*/
+
 const membersActions = [
-    'surveyLists.new',
-    //'surveyLists.view',
-    'surveyLists.edit.own',
-    'surveyLists.remove.own',
+    'surveylists.new',
+    'surveylists.edit.own',
+    'surveylists.remove.own',
+    'surveylists.view.public'
 ];
 Users.groups.members.can(membersActions);
 
 const adminActions = [
-    //'surveyLists.view',
-    'surveyLists.edit.all',
-    'surveyLists.remove.all'
+    'surveylists.new',
+    'surveylists.edit.all',
+    'surveylists.remove.all',
+    'surveylists.view.draft',
+    'surveylists.view.public',
+    'surveylists.view.closed'
 ];
 Users.groups.admins.can(adminActions);

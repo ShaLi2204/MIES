@@ -46,28 +46,6 @@ class SurveysEditForm extends Component {
   }
 }
 
-
-/*const SurveysEditForm = ({ documentId, closeModal, refetch }) => (
-  <div>
-  <Components.SmartForm
-    collection={SurveyLists}
-    documentId={documentId}
-    //mutationFragment={getFragment('SurveysItemFragment')}
-    showRemove={true}
-    successCallback={document => {
-      refetch();
-      closeModal();
-      EditAlert();
-    }}
-    removeSuccessCallback={document => {
-      refetch();
-      closeModal();
-      EditAlert();
-    }}
-  />
-  </div>
-);*/
-
 SurveysEditForm.propTypes = {
   closeModal: PropTypes.func,
   surveyList: PropTypes.object.isRequired

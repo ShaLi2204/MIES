@@ -1,4 +1,6 @@
-
+/**
+ *  Schema for the Survey Reponses
+ */
 
 const schema = {
 
@@ -18,92 +20,57 @@ const schema = {
         }
     },
 
-    /*
-        The survey responses's status. 
-    */
-    status: {
-        type: Number,
-        optional: true,
-        canRead: ['guests'],
-        canCreate: ['admins'],
-        canUpdate: ['admins'],
-        input: 'select',
-        onCreate: ({newDocument: document, currentUser}) => {
-        if (!document.status) {
-            return getCollection('Surveys').getDefaultStatus(currentUser);
-        }
-        },
-        onUpdate: ({data, currentUser}) => {
-        // if for some reason post status has been removed, give it default status
-        if (data.status === null) {
-            return getCollection('Surveys').getDefaultStatus(currentUser);
-        }
-        },
-        options: () => getCollection('Surveys').statuses,
-        /*group: formGroups.admin*/
-    }, 
-        /* The survey author's name */
-    author: {
-        type: String,
-        optional: true,
-        canRead: ['guests'],
-        onUpdate: ({data}) => {
-        // if userId is changing, change the author name too
-        if (data.userId) {
-            return Users.getDisplayNameById(data.userId)
-        }
-        }
-    },
-    /* The survey author's `_id`. */
     userId: {
-        type: String,
+        type: String, 
         optional: true,
         input: 'select',
         canRead: ['guests'],
         canCreate: ['members'],
         hidden: true,
         resolveAs: {
-        fieldName: 'user',
-        type: 'User',
-        resolver: async (survey, args, context) => {
-            if (!survey.userId) return null;
-            const user = await context.Users.loader.load(survey.userId);
-            return context.Users.restrictViewableFields(context.currentUser, context.Users, user);
-        },
-        addOriginalField: true
-        },
-    },
-     /* The survey author's name */
-     author: {
-        type: String,
-        optional: true,
-        canRead: ['guests'],
-        onUpdate: ({data}) => {
-        // if userId is changing, change the author name too
-        if (data.userId) {
-            return Users.getDisplayNameById(data.userId)
-        }
+            fieldName: 'user',
+            type: 'User',
+            resolver: async (surveyResponse, args, context) => {
+                if (!surveyResponse.userId) return null;
+                const user = await context.Users.loader.load(surveyResponse.userId);
+                return context.Users.restrictViewableFields(context.currentUser, context.Users, user);
+            },
+            addOriginalField: true
         }
     },
-    /* The survey author's `_id`. */
-    userId: {
-        type: String,
+
+    surveyListId: {
+        type: String, 
         optional: true,
-        input: 'select',
         canRead: ['guests'],
         canCreate: ['members'],
-        hidden: true,
+        max: 500, 
         resolveAs: {
-        fieldName: 'user',
-        type: 'User',
-        resolver: async (survey, args, context) => {
-            if (!survey.userId) return null;
-            const user = await context.Users.loader.load(survey.userId);
-            return context.Users.restrictViewableFields(context.currentUser, context.Users, user);
+            fieldName: 'surveyList',
+            type: 'SurveyList',
+            resolver: async (surveyResponse, args, {currentUser, Users, SurveyLists}) => {
+                if (!surveyResponse.surveyListId) return null;
+                const surveyList = await SurveyLists.loader.load(surveyResponse.surveyListId);
+                return Users.restrictViewableFields(currentUser, SurveyLists, surveyList);
+            },
+            addOriginalField: true
         },
-        addOriginalField: true
-        },
+        hidden: true
     },
-   /* TODO: SurveyItemDefinitions */ 
-   /* Surveyid */
+
+    surveyItemResponses: {
+        type: Object, 
+        optional: true,
+        canRead: ['guests'],
+        resolveAs: {
+            arguments: 'limit: Int = 5',
+            type: '[SurveyItemResponse]',
+            resolver: (surveyResponse, { limit }, { currentUser, Users, SurveyItemResponses }) => {
+                const surveyItemResponses = SurveyItemResponses.find({ surveyResponseId: surveyResponse._id}, { limit }).fetch();
+                return surveyItemResponses;
+            }
+        }
+    }
 }
+
+export default schema;

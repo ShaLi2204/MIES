@@ -7,8 +7,8 @@ registerFragment(`
     surveyListId
     label
     required
-    surveyListId
     surveyItemType
+    matrixSurveyItemId
   }
 `);
 

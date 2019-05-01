@@ -1,5 +1,5 @@
 
-import { Components, registerComponent, withCurrentUser, withAccess } from 'meteor/vulcan:core';
+import { Components, registerComponent, withCurrentUser } from 'meteor/vulcan:core';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { FormattedMessage, intlShape } from 'meteor/vulcan:i18n';
@@ -27,8 +27,4 @@ SurveysNewButton.contextTypes = {
   intl: intlShape
 };
 
-const accessOptions = {
-  groups: ['members', 'admins']
-};
-
-registerComponent({ name: 'SurveysNewButton', component: SurveysNewButton, hocs: [[withAccess, accessOptions]] });
+registerComponent({ name: 'SurveysNewButton', component: SurveysNewButton, hocs: [withCurrentUser] });

@@ -1,4 +1,8 @@
+/*
 
+Test Component
+
+*/
 
 import React, { Component } from 'react';
 import Modal from 'react-awesome-modal';
@@ -7,7 +11,8 @@ import { registerComponent, Components, withSingle, getFragment } from 'meteor/v
 import { SurveyLists } from '../../modules/Surveys/index.js';
 import { Link } from 'react-router';
 import { Button, Container, Dropdown, DropdownItem, DropdownToggle, DropdownMenu, Row, Col, ListGroup, ListGroupItem, Table } from 'reactstrap';
-import SurveyItems from '../../modules/SurveyItem/collection';
+//import SurveyItems from '../../modules/SurveyItem/collection';
+import { SurveyItems } from '../../modules/SurveyItem/index.js';
 import PropTypes from 'prop-types';
 
 /**
@@ -90,11 +95,11 @@ class NewSurveyQuestions extends Component{
                 </div>
 
 
-                <Components.SmartForm
+                {/*<Components.SmartForm
                     collection={SurveyItems}
                     //mutationFragment={getFragment('SurveysQuestionFragment')}
                     successCallback={props.successCallback}
-                />
+                />*/}
                 
             </div>
         )

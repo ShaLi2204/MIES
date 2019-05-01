@@ -7,7 +7,12 @@ import { withApollo } from 'react-apollo';
 
 const NavLoggedIn = ({currentUser, client}) => {
 
-  const menuItems = [];
+  const menuItems = [
+    {
+      to: '/account', //Page for editting the account information
+      labelId: 'users.edit_acount'
+    }
+  ];
 
   menuItems.push({
     labelId: 'users.log_out',
@@ -30,17 +35,6 @@ const NavLoggedIn = ({currentUser, client}) => {
           }
           menuItems={menuItems}
         />
-        <Components.SurveysNewButton/>
-
-        {/*}
-  
-        <Components.ModalTrigger label={Users.getDisplayName(currentUser)} size="small">
-          <div>
-            {Users.isAdmin(currentUser) ? <p>Admin</p> : null}
-            <Components.AccountsLoginForm />
-          </div>
-        </Components.ModalTrigger>*/}
-  
       </div>
 
     </div>

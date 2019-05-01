@@ -18,7 +18,6 @@ const CreatedSurveys = (props, context, currentUser) => {
 
     return(
         <div>
-            {props.currentUser._id}
         {!!props.currentUser? 
         <div>
             <Components.SurveysUsersProfile userId={props.currentUser._id} /*slug={props.params.slug}*//>

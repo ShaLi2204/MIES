@@ -5,10 +5,6 @@ Collection for defining survey
 */
 import schema from './schema.js';
 import { createCollection, getDefaultResolvers, getDefaultMutations }  from 'meteor/vulcan:core';
-//import './fragments.js';
-//import './permissions.js';
-//import './custom_fields.js';
-//import './views.js';
 import Users from 'meteor/vulcan:users';
 
 /**
@@ -29,22 +25,42 @@ export const SurveyLists = createCollection({
   mutations: getDefaultMutations('SurveyLists'),
 
 });
+
+SurveyLists.config = {};
 /*
-Surveys.config = {};
+SurveyLists.config.STATUS_DRAFT = 1;
+SurveyLists.config.STATUS_OPEN = 2;
+SurveyLists.config.STATUS_PUBLIC = 3;
+SurveyLists.config.STATUS_CLOSED = 4;
+SurveyLists.config.STATUS_DELETED = 5;
+*/
 
-Surveys.config.STATUS_DRAFT = 1;
-Surveys.config.STATUS_OPEN = 2;
-Surveys.config.STATUS_PUBLIC = 3;
-Surveys.config.STATUS_CLOSED = 4;
-Surveys.config.STATUS_DELETED = 5;
-
+SurveyLists.config.STATUS_DRAFT = 1;
+SurveyLists.config.STATUS_PUBLIC = 2;
+SurveyLists.config.STATUS_CLOSED = 3;
 
 /**
  * @summary Surveys statuses
  * @type {Object}
  */
-/*
-Surveys.statuses = [
+
+ SurveyLists.statuses = [
+   {
+     value: 1,
+     label: 'draft'
+   },
+   {
+     value: 2, 
+     label: 'public'
+   },
+   {
+     value: 3,
+     label: 'closed'
+   }
+ ];
+
+ /*
+SurveyLists.statuses = [
   {
     value: 1,
     label: 'draft'
@@ -68,15 +84,6 @@ Surveys.statuses = [
 ];*/
 //TODO: PASSCODE CHECK
 
-/*
-SurveyLists.checkAccess = (currentUser, surveyList) => {
-  if (Users.isAdmin(currentUser) || Users.owns(currentUser, surveyList)) { // admins can always see everything, users can always see their own surveys
-    return true;
-  } else {
-    return true;
-  }
-};
-*/
 
 /*
 
@@ -94,6 +101,17 @@ SurveyLists.addDefaultView(terms => {
     options: {sort: {createdAt: -1}}
   };
 });
+
+SurveyLists.checkAccess  = (currentUser, surveyList) => {
+  if (Users.isAdmin(currentUser) || Users.owns(currentUser, surveyList)) {
+    return true;
+  } else if (surveyList.isFuture) {
+    return false;
+  } else {
+    const status = _.findWhere(SurveyLists.statuses, {value: surveyList.status});
+    return Users.canDo(currentUser, `surveylists.view.${status.label}`);
+  }
+}
 
 
 
